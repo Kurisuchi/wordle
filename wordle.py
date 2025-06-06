@@ -1,4 +1,6 @@
-from ai import call_gpt
+#from ai import call_gpt
+from openai import OpenAI
+
 '''
 Wordle.py
 --------------
@@ -11,6 +13,8 @@ Important notes:
 - For each attempt, the program will give out clues if the letters in the player's guess is in the word
 - Number of correct letters is not given. Only their position if guessed correctly.
 '''
+
+
 
 def main():
     # Print a message to inform user the name of the game and its mechanics
@@ -156,9 +160,8 @@ def check_letters(word, guess):
 # This function will generate the word for the game
 def define_a_word():
     # Ask AI to generate a random 5-letter word for the game
-
-
     response = call_gpt('Can you give me a random 5-letter word?')
+    print(f"The word to guess is: {response}\n")
 
     # Split the words and save it as an sequence
     words = response.split()
@@ -170,6 +173,30 @@ def define_a_word():
     
     cleaned_word = ''.join(char for char in word if char.isalpha())
     return cleaned_word
+
+# This function will call the AI to get a response
+def call_gpt(prompt):
+    # Setting up the OpenAI API key
+    client = OpenAI(
+        api_key= "<API-KEY>"  # Replace with your OpenAI API key
+    )
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            store=True,
+            messages=[
+                {
+                    "role": "user", 
+                    "content": prompt
+                }
+            ],
+            max_tokens=200,
+            temperature=0
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        return f"Error: {e}"
 
 # This function will check if the word inputted is a valid word
 def validate_word(guess, guesses):
