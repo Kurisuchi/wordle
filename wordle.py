@@ -161,7 +161,6 @@ def check_letters(word, guess):
 def define_a_word():
     # Ask AI to generate a random 5-letter word for the game
     response = call_gpt('Can you give me a random 5-letter word?')
-    print(f"The word to guess is: {response}\n")
 
     # Split the words and save it as an sequence
     words = response.split()
